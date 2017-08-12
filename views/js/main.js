@@ -421,6 +421,7 @@ var resizePizzas = function(size) {
 
   changeSliderLabel(size);
 
+  // Now returns a percentage of the width
   function sizeSwitcher (size) {
     switch(size) {
       case "1":
@@ -434,7 +435,12 @@ var resizePizzas = function(size) {
     }
   }
 
-  // Iterates through pizza elements on the page and changes their widths
+  /* Iterates through pizza elements on the page and changes their widths
+     Select all pizza element only once!
+     The new size is also calculated only once, get it from sizeSwitcher
+     The loop only action now is to assign the new size to the pizza elements
+     width avoid the layout to be repainted every iteration.
+  */
   function changePizzaSizes(size) {
     var pizzaEl = document.querySelectorAll(".randomPizzaContainer");
     for (var i = 0; i < pizzaEl.length; i++) {
@@ -488,13 +494,14 @@ function updatePositions() {
   window.performance.mark("mark_start_frame");
 
   var items = document.querySelectorAll('.mover');
-  var height = document.body.scrollTop;
-  var leftPos = [];
-  for (var i = 0; i < items.length; i++) {
-    leftPos.push(items[i].basicLeft + 100 * Math.sin((height / 1250) + (i % 5)) + 'px');
+  var scrollTop = document.body.scrollTop;
+  var phase = [];
+
+  for (var i = 0; i < 5; i++) {
+    phase.push(Math.sin(scrollTop / 1250 + i) * 100);
   }
   for (i = 0; i < items.length; i++) {
-    items[i].style.left = leftPos[i];
+    items[i].style.left = items[i].basicLeft + phase[i%5] + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -512,7 +519,10 @@ document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
   var movingPizzas = document.querySelector("#movingPizzas1");
-  for (var i = 0; i < 200; i++) {
+  var intViewportHeight = window.innerHeight;
+  var n_pizzas = intViewportHeight/(cols*4);
+  console.log(n_pizzas);
+  for (var i = 0; i < n_pizzas; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
