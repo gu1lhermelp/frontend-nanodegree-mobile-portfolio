@@ -20,3 +20,6 @@ _width_ was set;
 in it was also forcing the layout to be repainted every iteration. In order to
 solve this, one loop was made to calculate the new position of each pizza and
 another loop to set the position.
+
+# Instructions to run
+Open **index.html** on your browser.
